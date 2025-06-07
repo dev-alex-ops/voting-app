@@ -1,0 +1,87 @@
+# ─────────────────────────────────────────────
+# General project-level ignores
+# ─────────────────────────────────────────────
+/database
+.env
+
+# ─────────────────────────────────────────────
+# Backend ignores
+# ─────────────────────────────────────────────
+
+# Output & build
+/backend/dist
+/backend/build
+/backend/coverage
+/backend/.nyc_output
+
+# Dependencies
+/backend/node_modules
+
+# Logs
+/backend/logs
+/backend/*.log
+/backend/npm-debug.log*
+/backend/pnpm-debug.log*
+/backend/yarn-debug.log*
+/backend/yarn-error.log*
+/backend/lerna-debug.log*
+
+# IDE & editor configs
+/backend/.DS_Store
+/backend/.idea
+/backend/.project
+/backend/.classpath
+/backend/.c9/
+/backend/*.launch
+/backend/.settings/
+/backend/*.sublime-workspace
+
+# VSCode (allow specific config files)
+/backend/.vscode/*
+!/backend/.vscode/settings.json
+!/backend/.vscode/tasks.json
+!/backend/.vscode/launch.json
+!/backend/.vscode/extensions.json
+
+# Environment files
+/backend/.env
+/backend/.env.local
+/backend/.env.development.local
+/backend/.env.test.local
+/backend/.env.production.local
+
+# Temp & PID files
+/backend/.temp
+/backend/.tmp
+/backend/pids
+/backend/*.pid
+/backend/*.seed
+/backend/*.pid.lock
+
+# Reports
+/backend/report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# ─────────────────────────────────────────────
+# Frontend ignores
+# ─────────────────────────────────────────────
+
+# Dependencies
+/frontend/node_modules
+/frontend/.pnp
+/frontend/.pnp.js
+
+# Output
+/frontend/build
+/frontend/coverage
+
+# Environment files
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+# Logs & misc
+/frontend/.DS_Store
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*

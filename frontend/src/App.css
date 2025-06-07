@@ -1,0 +1,94 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
+  width: 50%;
+  /* ocupa toda la altura de .team */
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.team {
+  flex: 1;
+  height: 100vh; /* asegura misma altura */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.team.sevilla {
+  background: linear-gradient(135deg, #cc0000 50%, #fff 50%);
+}
+
+.team.betis {
+  background: linear-gradient(135deg, #fff 50%, #007f3f 50%);
+}
+
+.shield {
+  width: 100px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.team h1 {
+  margin: 0.5rem 0 1rem 0;
+  color: #222;
+}
+
+.team button {
+  padding: 0.6rem 1.2rem;
+  background-color: #0078d4;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.team button:hover {
+  background-color: #005fa3;
+}
+
+.vote-counter {
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.logout-container {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1100;
+}
+
+.logout-button {
+  padding: 0.6rem 1.2rem;
+  background-color: #0078d4;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #005fa3;
+}
