@@ -29,7 +29,7 @@ Aplicación web full-stack que permite a los usuarios registrarse, iniciar sesi�
 ### 1. Clona el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/voting-app.git
+git clone https://github.com/dev-alex-ops/voting-app.git
 cd voting-app
 ```
 
@@ -72,8 +72,9 @@ Se usa JWT para gestionar la autenticación.
 ├── backend/            # NestJS API con módulos de auth, user, vote
 ├── frontend/           # React app + NGINX
 ├── database/           # Carpeta creada en local para persistencia de PostgreSQL
+├── .env.sample         # Fichero de ejemplo para las variables de ejecución local con Docker-Compose
+├── .gitignore          # Gitignore general para todos los monorepos
 ├── docker-compose.yml  # Entorno de prueba local
-├── Dockerfile(s)       # Construcción de imágenes frontend y backend
 ├── README.md           # Este archivo
 ```
 
