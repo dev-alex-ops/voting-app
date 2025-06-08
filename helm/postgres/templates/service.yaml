@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "postgres.fullname" . }}
+  labels:
+    app: {{ include "postgres.name" . }}
+spec:
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 5432
+  selector:
+    app: {{ include "postgres.name" . }}
+  clusterIP: None  # opcional, si prefieres servicio tipo headless

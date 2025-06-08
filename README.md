@@ -1,82 +1,189 @@
-# Voting App 
+# Voting App 🗳️⚽
 
-Aplicación web full-stack que permite a los usuarios registrarse, iniciar sesión y votar entre dos equipos de fútbol: **Sevilla FC** y **Real Betis Balompié**. Cada usuario puede emitir **solo un voto**. Si cambia de equipo, el voto anterior se elimina y se registra el nuevo.
+Aplicación web full-stack que permite a los usuarios registrarse, iniciar sesión y votar entre dos equipos de fútbol: **Sevilla FC** y **Real Betis Balompié**.
 
+Diseñada con fines educativos y de pruebas, esta app sirve como ejemplo para practicar despliegue en entornos locales y en clústeres Kubernetes usando herramientas modernas del ecosistema DevOps.
 
+---
 
-## Tecnologías utilizadas
+## 📚 Índice
+
+1. [Tecnologías utilizadas](#tecnologías-utilizadas)
+2. [Funcionamiento de la aplicación](#funcionamiento-de-la-aplicación)
+3. [Estructura del repositorio](#estructura-del-repositorio)
+4. [Ejecutar en local con Docker Compose](#ejecutar-en-local-con-docker-compose)
+5. [Despliegue en Kubernetes (K3s)](#despliegue-en-kubernetes-k3s)
+6. [Seguridad y gestión de secretos](#seguridad-y-gestión-de-secretos)
+7. [Créditos](#créditos)
+
+---
+
+## 🛠️ Tecnologías utilizadas
 
 ### Frontend
 - React
 - Axios
-- NGINX (servidor de archivos estáticos en producción)
 - CSS puro
+- NGINX (para servir archivos estáticos en producción)
 
 ### Backend
-- NestJS
-- TypeScript
-- JWT (autenticación)
+- NestJS + TypeScript
 - PostgreSQL
+- JWT (autenticación segura)
+- TypeORM
 
 ### Infraestructura
 - Docker & Docker Compose (entorno local)
+- Helm (despliegue en clúster Kubernetes)
+- Sealed Secrets (gestión segura de credenciales)
 
+---
 
+## ⚙️ Funcionamiento de la aplicación
 
+- Los usuarios deben **registrarse o iniciar sesión** para poder votar.
+- Cada usuario puede tener **solo un voto activo**.
+- Si un usuario vota al equipo contrario, su voto anterior se **reemplaza automáticamente**.
+- La autenticación se gestiona con **tokens JWT** almacenados en `localStorage`.
 
-## Ejecución en local con Docker Compose
+---
 
-### 1. Clona el repositorio
+## 🗂️ Estructura del repositorio
+
+```
+.
+├── backend/            # API NestJS con módulos de auth, user y vote
+├── frontend/           # App React con NGINX en producción
+├── database/           # Carpeta local para persistencia de PostgreSQL
+├── helm/               # Charts Helm para PostgreSQL, backend y frontend
+├── k8s/                # Archivos Kubernetes (ingress, secretos, etc.)
+│   ├── ingress.yaml
+│   ├── secrets/
+│   └── sealed-secrets/
+├── scripts/            # Scripts utilitarios
+│   └── deploy.sh
+├── docker-compose.yml  # Entorno local completo
+├── .env.sample         # Variables de entorno de ejemplo
+└── README.md
+```
+
+---
+
+## 🧪 Ejecutar en local con Docker Compose
+
+### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/dev-alex-ops/voting-app.git
 cd voting-app
 ```
 
-### 2. Crea la carpeta para persistencia de la base de datos
-⚠️ Es importante para que PostgreSQL guarde los datos aunque reinicies los contenedores.
+### 2. Crear la carpeta de persistencia
 
 ```bash
 mkdir database
 ```
-### 3. Crea un archivo .env en la raíz (opcional, si usas variables)
+
+### 3. Crear un archivo `.env` (opcional)
+
 ```env
-POSTGRES_DB=votacion
-POSTGRES_USER=user
+POSTGRES_DB=nombre_de_la_base_de_datos
+POSTGRES_USER=usuario
 POSTGRES_PASSWORD=password
 ```
 
-### 4. Inicia los contenedores
+### 4. Levantar los contenedores
+
 ```bash
 docker compose -f docker-compose.yml up --build
 ```
-La aplicación estará disponible en:
-- 📍 Frontend: http://localhost:80
-- 📍 Backend API: http://localhost:3000/api
 
+La app estará disponible en:
+- 🌍 Frontend: http://localhost
+- 🔗 Backend API: http://localhost:3000/api
 
+---
 
-## Autenticación y votos
-Los usuarios deben registrarse o iniciar sesión para poder votar.
+## ☸️ Despliegue en Kubernetes (K3s)
 
-Cada usuario tiene un solo voto activo.
+### ✅ Requisitos previos
 
-Si intenta votar al equipo contrario, el sistema reemplaza su voto anterior.
+| Herramienta        | Función                                                        |
+|--------------------|----------------------------------------------------------------|
+| Docker             | Construcción de imágenes                                       |
+| docker buildx      | Soporte multiplataforma (ej. ARM64 para Raspberry Pi)          |
+| kubectl            | Interacción con el clúster Kubernetes                          |
+| helm               | Instalación de charts Helm                                     |
+| kubeseal           | Cifrado de secretos para SealedSecrets                         |
+| sealed-secrets     | Controlador instalado en el clúster (Bitnami)                  |
+| Token GHCR         | Permisos `read:packages` y `write:packages` para GitHub        |
 
-Se usa JWT para gestionar la autenticación.
-
-
-##  Estructura de carpetas
-```graphql
-.
-├── backend/            # NestJS API con módulos de auth, user, vote
-├── frontend/           # React app + NGINX
-├── database/           # Carpeta creada en local para persistencia de PostgreSQL
-├── .env.sample         # Fichero de ejemplo para las variables de ejecución local con Docker-Compose
-├── .gitignore          # Gitignore general para todos los monorepos
-├── docker-compose.yml  # Entorno de prueba local
-├── README.md           # Este archivo
+Instala `sealed-secrets` en el clúster:
+```bash
+kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.24.1/controller.yaml
 ```
 
-##  Créditos
-Aplicación desarrollada como MVP educativo con fines demostrativos.
+---
+
+### ⚙️ Pasos para el despliegue
+
+1. **Crear los secrets en texto plano**
+
+Ubicados en `./k8s/secrets/`, por ejemplo:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secret
+  namespace: default
+type: Opaque
+stringData:
+  DB_USER: postgres
+  DB_PASS: postgres
+  DB_NAME: votaciones
+  DB_HOST: postgres
+  DB_PORT: "5432"
+```
+
+> ⚠️ Estos archivos están ignorados por Git y **no deben subirse al repo**.
+
+2. **Ejecutar el script de despliegue**
+
+```bash
+./scripts/deploy.sh
+```
+
+Este script:
+- Pide token y credenciales del registry (GitHub).
+- Construye imágenes (opcional).
+- Cifra los secretos con `kubeseal`.
+- Lanza los charts de Helm para `postgres`, `backend`, y `frontend`.
+- Aplica el `Ingress`.
+
+3. **Acceder a la app**
+
+Edita tu `/etc/hosts` con la IP del nodo principal:
+
+```
+IP.DE.TU.NODO app.local
+```
+
+Luego abre en navegador:  
+🌐 http://app.local
+
+---
+
+## 🔐 Seguridad y gestión de secretos
+
+- Los secretos cifrados (`sealed-secrets`) son **seguros para subir al repositorio**.
+- Los secretos en texto plano se mantienen en `k8s/secrets/`, fuera de control de versiones.
+- Los tokens JWT están almacenados en `localStorage` del navegador.
+
+---
+
+## 👨‍💻 Créditos
+
+Aplicación desarrollada como MVP educativo para prácticas DevOps, despliegue de contenedores y arquitectura moderna con React + NestJS + PostgreSQL.
+
+---

@@ -1,0 +1,16 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  tag: "15"
+  pullPolicy: IfNotPresent
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+service:
+  port: 5432
+
+fullnameOverride: "postgres"
