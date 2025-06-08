@@ -86,3 +86,10 @@
 /frontend/npm-debug.log*
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
+
+
+# ─────────────────────────────────────────────
+# Infrastructure ignores
+# ─────────────────────────────────────────────
+/k8s/secrets/**
+/k8s/sealed-secrets/**
